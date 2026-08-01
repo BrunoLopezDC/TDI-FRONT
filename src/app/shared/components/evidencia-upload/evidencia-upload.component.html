@@ -1,0 +1,46 @@
+<p-dialog
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  header="Subir evidencia"
+  [modal]="true"
+  [style]="{ width: '420px' }"
+  (onHide)="onHide()"
+>
+  <div class="upload-body">
+    <p class="upload-desc">Selecciona el archivo de evidencia para esta actividad.</p>
+
+    <div class="file-picker">
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileSelected($event)"
+        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+        class="file-input"
+        id="evidencia-file"
+      />
+      <label for="evidencia-file" class="file-label">
+        <span class="pi pi-upload file-label-icon"></span>
+        <span>{{ archivo() ? archivo()!.name : 'Elegir archivo' }}</span>
+      </label>
+    </div>
+
+    @if (errorMsg(); as msg) {
+      <p-message severity="error" [text]="msg" styleClass="upload-error" />
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancelar"
+      severity="secondary"
+      styleClass="p-button-text"
+      (onClick)="visible.set(false)"
+    />
+    <p-button
+      label="Subir"
+      [disabled]="!archivo()"
+      [loading]="subiendo()"
+      (onClick)="subir()"
+    />
+  </ng-template>
+</p-dialog>

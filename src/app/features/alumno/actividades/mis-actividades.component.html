@@ -1,0 +1,136 @@
+<app-shell>
+  <div class="actividades-page">
+    @if (loading()) {
+      <div class="actividades-loading">
+        <p-skeleton width="200px" height="32px" />
+        <p-skeleton width="100%" height="48px" styleClass="filtros-skeleton" />
+        <p-skeleton width="100%" height="300px" />
+      </div>
+    } @else if (error(); as err) {
+      <div class="actividades-error">
+        <p-message severity="error" [text]="err" />
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="cargarRegistros()" styleClass="p-button-outlined" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Mis actividades</h1>
+      </header>
+
+      @if (totalSinFiltro() === 0) {
+        <div class="empty-state-full">
+          <span class="empty-icon pi pi-inbox"></span>
+          <h2 class="empty-title">Aún no tienes actividades</h2>
+          <p class="empty-desc">Selecciona actividades del catálogo para empezar a registrar tu progreso.</p>
+          <a class="empty-link" routerLink="/alumno">Ir al catálogo</a>
+        </div>
+      } @else {
+        <div class="actividades-card">
+          <div class="filtros-bar">
+            <p-select
+              [options]="filterOptions"
+              optionLabel="label"
+              optionValue="value"
+              [(ngModel)]="filtroEstado"
+              placeholder="Filtrar por estado"
+              styleClass="filtro-estado"
+            />
+            <span class="busqueda-wrapper">
+              <i class="pi pi-search busqueda-icon"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="textoBusqueda"
+                placeholder="Buscar actividad..."
+                class="busqueda-input"
+              />
+            </span>
+          </div>
+
+          @if (totalFiltrados() === 0) {
+            <div class="empty-state-filter">
+              <span class="empty-icon pi pi-search"></span>
+              <p class="empty-desc">No se encontraron actividades con ese criterio.</p>
+              <p-button
+                label="Limpiar filtros"
+                icon="pi pi-filter-slash"
+                (onClick)="filtroEstado.set(''); textoBusqueda.set('')"
+                styleClass="p-button-text"
+              />
+            </div>
+          } @else {
+            <p-table
+              [value]="registrosFiltrados()"
+              dataKey="registro_id"
+              [rows]="20"
+              [paginator]="totalFiltrados() > 20"
+              [showCurrentPageReport]="totalFiltrados() > 20"
+              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} actividades"
+              styleClass="p-datatable-sm actividades-table"
+              [tableStyle]="{ 'min-width': '50rem' }"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Nombre de la actividad</th>
+                  <th style="width: 140px">Estado</th>
+                  <th style="width: 120px">Horas otorgadas</th>
+                  <th style="width: 140px">Acciones</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>
+                    <span class="actividad-nombre-cell">{{ row.tdi_nombre }}</span>
+                  </td>
+                  <td>
+                    <span class="estado-cell">
+                      <p-tag [value]="row.estado" [severity]="tagSeverity(row.estado)" />
+                      @if (row.estado === 'RECHAZADA' && row.motivo_rechazo) {
+                        <span
+                          class="rechazo-info pi pi-info-circle"
+                          [pTooltip]="row.motivo_rechazo"
+                          tooltipPosition="top"
+                        ></span>
+                      }
+                    </span>
+                  </td>
+                  <td>
+                    @if (row.estado === 'APROBADA' && row.horas_otorgadas > 0) {
+                      <span class="horas-value">{{ row.horas_otorgadas }}h</span>
+                    } @else {
+                      <span class="horas-value muted">&mdash;</span>
+                    }
+                  </td>
+                  <td>
+                    @if (row.estado === 'PENDIENTE') {
+                      <p-button
+                        label="Subir evidencia"
+                        icon="pi pi-upload"
+                        size="small"
+                        (onClick)="registroIdSubir.set(row.registro_id); uploadDialogVisible.set(true)"
+                      />
+                    }
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="4" class="empty-filter-row">
+                    No se encontraron actividades con ese criterio.
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <app-evidencia-upload
+    [registroId]="registroIdSubir()"
+    [visible]="uploadDialogVisible()"
+    (visibleChange)="uploadDialogVisible.set($event)"
+    (uploaded)="onEvidenciaSubida($event)"
+  />
+  <p-toast />
+</app-shell>

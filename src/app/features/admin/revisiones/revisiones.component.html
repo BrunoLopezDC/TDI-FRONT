@@ -1,0 +1,133 @@
+<app-shell>
+  <div class="revisiones-page">
+    <header class="page-header">
+      <h1 class="page-title">Revisiones pendientes</h1>
+      <p class="page-subtitle">Revisa las evidencias subidas por los alumnos y emite tu dictamen.</p>
+    </header>
+
+    @if (loading()) {
+      <div class="revisiones-loading">
+        @for (_ of [1, 2, 3]; track $index) {
+          <p-skeleton width="100%" height="200px" />
+        }
+      </div>
+    } @else if (error(); as err) {
+      <div class="revisiones-error">
+        <p-message severity="error" [text]="err" />
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="cargarRevisiones()" styleClass="p-button-outlined" />
+      </div>
+    } @else if (revisiones().length === 0) {
+      <div class="empty-state">
+        <span class="pi pi-check-circle empty-icon"></span>
+        <p class="empty-title">¡Todo al día!</p>
+        <p class="empty-desc">No hay evidencias pendientes de revisión.</p>
+      </div>
+    } @else {
+      <div class="revisiones-list">
+        @for (revision of revisiones(); track revision.revision_id) {
+          <div class="revision-card">
+            <div class="revision-header">
+              <div class="alumno-info">
+                <span class="alumno-avatar">{{ revision.nombre.charAt(0) }}</span>
+                <div class="alumno-text">
+                  <h3 class="alumno-nombre">{{ revision.nombre }}</h3>
+                  <span class="alumno-matricula">{{ revision.matricula }}</span>
+                </div>
+              </div>
+              <a
+                class="ver-evidencia"
+                [href]="evidenciaUrl(revision.evidencia_url)"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="pi pi-external-link"></i>
+                Ver evidencia
+              </a>
+            </div>
+
+            <div class="tdi-row">
+              <span class="tdi-label">Actividad</span>
+              <span class="tdi-nombre">{{ revision.tdi_nombre }}</span>
+            </div>
+
+            <div class="ocr-block">
+              <div class="ocr-header">
+                <i class="pi pi-sparkles ocr-icon"></i>
+                <span>Observaciones de IA (OCR/CLIP)</span>
+              </div>
+              <p class="ocr-text">{{ revision.ocr_observaciones }}</p>
+            </div>
+
+            <div class="acciones">
+              <p-button
+                label="Aprobar"
+                icon="pi pi-check"
+                severity="success"
+                styleClass="p-button-outlined"
+                (onClick)="abrirDictamen(revision, 'APROBADA')"
+              />
+              <p-button
+                label="Rechazar"
+                icon="pi pi-times"
+                severity="danger"
+                styleClass="p-button-outlined"
+                (onClick)="abrirDictamen(revision, 'RECHAZADA')"
+              />
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <p-toast />
+
+  <p-dialog
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [header]="decision() === 'APROBADA' ? 'Aprobar evidencia' : 'Rechazar evidencia'"
+    [modal]="true"
+    [style]="{ width: '460px' }"
+    (onHide)="cerrarDialogo()"
+  >
+    @if (revisionActiva(); as rev) {
+      <div class="dictamen-body">
+        <div class="dictamen-resumen">
+          <span class="dictamen-alumno">{{ rev.nombre }} · {{ rev.matricula }}</span>
+          <span class="dictamen-tdi">{{ rev.tdi_nombre }}</span>
+        </div>
+
+        <label class="comentario-label" for="dictamen-comentario">Comentario</label>
+        <textarea
+          id="dictamen-comentario"
+          pTextarea
+          [ngModel]="comentario()"
+          (ngModelChange)="comentario.set($event)"
+          rows="4"
+          autoResize
+          placeholder="Escribe un comentario obligatorio para justificar el dictamen..."
+          class="comentario-input"
+        ></textarea>
+        <span class="comentario-hint">El comentario es obligatorio.</span>
+      </div>
+    }
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        styleClass="p-button-text"
+        (onClick)="cerrarDialogo()"
+        [disabled]="enviando()"
+      />
+      <p-button
+        [label]="decision() === 'APROBADA' ? 'Confirmar aprobación' : 'Confirmar rechazo'"
+        [icon]="decision() === 'APROBADA' ? 'pi pi-check' : 'pi pi-times'"
+        [severity]="decision() === 'APROBADA' ? 'success' : 'danger'"
+        [disabled]="!comentario().trim()"
+        [loading]="enviando()"
+        (onClick)="confirmarDictamen()"
+      />
+    </ng-template>
+  </p-dialog>
+</app-shell>

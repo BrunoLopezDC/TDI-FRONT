@@ -1,0 +1,247 @@
+<app-shell>
+  <div class="admin-catalogo-page">
+    <header class="page-header">
+      <div class="header-text">
+        <h1 class="page-title">Gestión de catálogo</h1>
+        <p class="page-subtitle">Crea, edita y elimina las actividades disponibles en el catálogo.</p>
+      </div>
+      <p-button label="Nueva actividad" icon="pi pi-plus" (onClick)="abrirFormulario()" />
+    </header>
+
+    @if (loading()) {
+      <div class="loading-block">
+        <p-skeleton width="100%" height="48px" />
+        <p-skeleton width="100%" height="320px" />
+      </div>
+    } @else if (error(); as err) {
+      <div class="error-block">
+        <p-message severity="error" [text]="err" />
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="cargarDatos()" styleClass="p-button-outlined" />
+      </div>
+    } @else if (actividades().length === 0) {
+      <div class="empty-state">
+        <span class="pi pi-book empty-icon"></span>
+        <p class="empty-title">Aún no hay actividades en el catálogo</p>
+        <p class="empty-desc">Crea la primera actividad para que los alumnos puedan seleccionarla.</p>
+        <p-button label="Nueva actividad" icon="pi pi-plus" (onClick)="abrirFormulario()" />
+      </div>
+    } @else {
+      <div class="table-card">
+        <p-table [value]="actividades()" [tableStyle]="{ 'min-width': '50rem' }" [stripedRows]="true">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nombre</th>
+              <th>Horas</th>
+              <th>Puntaje</th>
+              <th>Categoría</th>
+              <th>Fecha de vencimiento</th>
+              <th style="width: 110px">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row>
+            <tr>
+              <td>{{ row.nombre }}</td>
+              <td>{{ row.horas }}</td>
+              <td>{{ row.puntaje }}</td>
+              <td>{{ categoriaNombre(row.categoria_id) }}</td>
+              <td>{{ formatearFecha(row.fecha_vencimiento) }}</td>
+              <td>
+                <div class="acciones-cell">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="info"
+                    [pTooltip]="'Editar'"
+                    (onClick)="abrirFormulario(row)"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="danger"
+                    [pTooltip]="'Eliminar'"
+                    (onClick)="confirmarEliminar(row)"
+                  />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+  </div>
+
+  <p-toast />
+  <p-confirmDialog />
+
+  <p-dialog
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [header]="editandoId() ? 'Editar actividad' : 'Nueva actividad'"
+    [modal]="true"
+    [style]="{ width: '600px' }"
+    (onHide)="cerrarFormulario()"
+  >
+    @if (formError(); as err) {
+      <p-message severity="error" [text]="err" styleClass="form-error" />
+    }
+
+    <div class="form-grid">
+      <div class="form-field form-field-full">
+        <label for="act-nombre">Nombre</label>
+        <input
+          id="act-nombre"
+          pInputText
+          [ngModel]="nombre()"
+          (ngModelChange)="nombre.set($event)"
+          placeholder="Nombre de la actividad"
+          class="campo-input"
+        />
+      </div>
+
+      <div class="form-field form-field-full">
+        <label for="act-descripcion">Descripción</label>
+        <textarea
+          id="act-descripcion"
+          pTextarea
+          rows="3"
+          autoResize
+          [ngModel]="descripcion()"
+          (ngModelChange)="descripcion.set($event)"
+          placeholder="Describe la actividad"
+          class="campo-input"
+        ></textarea>
+      </div>
+
+      <div class="form-field form-field-full">
+        <label for="act-evidencia">Evidencia requerida</label>
+        <input
+          id="act-evidencia"
+          pInputText
+          [ngModel]="evidenciaRequerida()"
+          (ngModelChange)="evidenciaRequerida.set($event)"
+          placeholder="Ej: Constancia de participación oficial"
+          class="campo-input"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-horas">Horas</label>
+        <p-inputNumber
+          inputId="act-horas"
+          [ngModel]="horas()"
+          (ngModelChange)="horas.set($event)"
+          [min]="0"
+          placeholder="0"
+          class="campo-input"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-puntaje">Puntaje</label>
+        <p-inputNumber
+          inputId="act-puntaje"
+          [ngModel]="puntaje()"
+          (ngModelChange)="puntaje.set($event)"
+          [min]="0"
+          placeholder="0"
+          class="campo-input"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-fecha">Fecha de vencimiento</label>
+        <p-datepicker
+          inputId="act-fecha"
+          [ngModel]="fechaVencimiento()"
+          (ngModelChange)="fechaVencimiento.set($event)"
+          dateFormat="yy-mm-dd"
+          [dataType]="'string'"
+          [minDate]="minFecha()"
+          [showIcon]="true"
+          placeholder="AAAA-MM-DD"
+          [appendTo]="'body'"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-categoria">Categoría</label>
+        <p-select
+          inputId="act-categoria"
+          [options]="categorias()"
+          optionLabel="nombre"
+          optionValue="id"
+          [ngModel]="categoriaId()"
+          (ngModelChange)="categoriaId.set($event)"
+          placeholder="Selecciona"
+          [appendTo]="'body'"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-dimension">Dimensión</label>
+        <p-select
+          inputId="act-dimension"
+          [options]="dimensiones()"
+          optionLabel="nombre"
+          optionValue="id"
+          [ngModel]="dimensionId()"
+          (ngModelChange)="dimensionId.set($event)"
+          placeholder="Selecciona"
+          [appendTo]="'body'"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-trascendencia">Trascendencia</label>
+        <p-select
+          inputId="act-trascendencia"
+          [options]="trascendencias()"
+          optionLabel="nombre"
+          optionValue="id"
+          [ngModel]="trascendenciaId()"
+          (ngModelChange)="trascendenciaId.set($event)"
+          placeholder="Selecciona"
+          [appendTo]="'body'"
+          styleClass="w-full"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="act-entorno">Entorno</label>
+        <p-select
+          inputId="act-entorno"
+          [options]="entornos()"
+          optionLabel="nombre"
+          optionValue="id"
+          [ngModel]="entornoId()"
+          (ngModelChange)="entornoId.set($event)"
+          placeholder="Selecciona"
+          [appendTo]="'body'"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        styleClass="p-button-text"
+        (onClick)="cerrarFormulario()"
+        [disabled]="enviando()"
+      />
+      <p-button
+        [label]="editandoId() ? 'Guardar cambios' : 'Crear actividad'"
+        icon="pi pi-check"
+        [disabled]="!formValido()"
+        [loading]="enviando()"
+        (onClick)="guardar()"
+      />
+    </ng-template>
+  </p-dialog>
+</app-shell>

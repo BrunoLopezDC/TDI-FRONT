@@ -1,0 +1,51 @@
+<app-shell>
+  <div class="perfil-page">
+    @if (!user()) {
+      <div class="perfil-loading">
+        <p-skeleton width="100%" height="160px" />
+        <p-skeleton width="100%" height="200px" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Mi perfil</h1>
+      </header>
+
+      <div class="perfil-cards">
+        <p-card class="perfil-header-card">
+          <ng-template pTemplate="content">
+            <div class="perfil-header">
+              <p-avatar [label]="iniciales()" shape="circle" styleClass="perfil-avatar" size="xlarge" />
+              <div class="perfil-info">
+                <span class="perfil-nombre">{{ nombreCompleto() }}</span>
+                <span class="perfil-email">{{ user()?.email }}</span>
+                <p-tag [value]="roleLabel()" [severity]="roleSeverity()" />
+              </div>
+            </div>
+          </ng-template>
+        </p-card>
+
+        <p-card class="perfil-datos-card">
+          <ng-template pTemplate="content">
+            <div class="perfil-datos">
+              <h2 class="perfil-datos-title">Datos del personal</h2>
+              <div class="dato-row">
+                <span class="dato-label">Teléfono</span>
+                <span class="dato-value">{{ user()?.telefono }}</span>
+              </div>
+              @if (perfilAdministrativo()?.cargo) {
+                <div class="dato-row">
+                  <span class="dato-label">Cargo</span>
+                  <span class="dato-value">{{ perfilAdministrativo()?.cargo }}</span>
+                </div>
+              }
+              <div class="dato-row">
+                <span class="dato-label">Fecha de alta</span>
+                <span class="dato-value">{{ fechaAlta() | date: "d 'de' MMMM 'de' yyyy" }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
+    }
+  </div>
+</app-shell>

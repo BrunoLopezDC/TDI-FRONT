@@ -1,0 +1,122 @@
+<div class="shell" [class.shell-collapsed]="collapsed()">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <span class="pi pi-graduation-cap sidebar-logo-icon"></span>
+        <span class="sidebar-logo-text">UTEQ</span>
+      </div>
+      <p-button
+        [icon]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+        (onClick)="toggleCollapsed()"
+        styleClass="p-button-text p-button-rounded sidebar-toggle"
+      />
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems(); track $index) {
+        @if (item.route) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="nav-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-item"
+            [pTooltip]="collapsed() ? item.tooltip : ''"
+            tooltipPosition="right"
+          >
+            <span [class]="item.icon"></span>
+            <span class="nav-label">{{ item.label }}</span>
+            @if (item.badge && notifUnreadCount() > 0) {
+              <span class="nav-badge">{{ notifUnreadCount() }}</span>
+            }
+          </a>
+        } @else {
+          <!-- TODO: ruta {{ item.label }} aún no implementada -->
+          <a class="nav-item nav-disabled" [pTooltip]="collapsed() ? item.tooltip : ''" tooltipPosition="right">
+            <span [class]="item.icon"></span>
+            <span class="nav-label">{{ item.label }}</span>
+          </a>
+        }
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <p-avatar [label]="userInitials()" shape="circle" styleClass="sidebar-avatar" />
+      <div class="sidebar-user-info">
+        <span class="sidebar-user-name">{{ userName() }}</span>
+        <span class="sidebar-user-role">{{ userRole() }}</span>
+      </div>
+      <p-button
+        icon="pi pi-sign-out"
+        (onClick)="logout()"
+        [pTooltip]="collapsed() ? 'Cerrar sesión' : ''"
+        tooltipPosition="right"
+        styleClass="p-button-text sidebar-logout"
+      />
+    </div>
+  </aside>
+
+  <p-drawer
+    [(visible)]="mobileOpen"
+    position="left"
+    styleClass="mobile-drawer"
+    [showCloseIcon]="false"
+  >
+    <div class="sidebar sidebar-drawer">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span class="pi pi-graduation-cap sidebar-logo-icon"></span>
+          <span class="sidebar-logo-text">UTEQ</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        @for (item of navItems(); track $index) {
+          @if (item.route) {
+            <a
+              [routerLink]="item.route"
+              routerLinkActive="nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="nav-item"
+              (click)="mobileOpen.set(false)"
+            >
+              <span [class]="item.icon"></span>
+              <span class="nav-label">{{ item.label }}</span>
+              @if (item.badge && notifUnreadCount() > 0) {
+                <span class="nav-badge">{{ notifUnreadCount() }}</span>
+              }
+            </a>
+          } @else {
+            <a class="nav-item nav-disabled">
+              <span [class]="item.icon"></span>
+              <span class="nav-label">{{ item.label }}</span>
+            </a>
+          }
+        }
+      </nav>
+
+      <div class="sidebar-footer">
+        <p-avatar [label]="userInitials()" shape="circle" styleClass="sidebar-avatar" />
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name">{{ userName() }}</span>
+          <span class="sidebar-user-role">{{ userRole() }}</span>
+        </div>
+        <p-button
+          icon="pi pi-sign-out"
+          (onClick)="logout()"
+          styleClass="p-button-text sidebar-logout"
+        />
+      </div>
+    </div>
+  </p-drawer>
+
+  <main class="main-content">
+    <div class="mobile-header">
+      <p-button
+        icon="pi pi-bars"
+        (onClick)="mobileOpen.set(true)"
+        styleClass="p-button-text mobile-menu-btn"
+      />
+    </div>
+    <ng-content />
+  </main>
+</div>

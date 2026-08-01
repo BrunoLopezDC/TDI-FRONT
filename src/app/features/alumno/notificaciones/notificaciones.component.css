@@ -1,0 +1,161 @@
+.notificaciones-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.notificaciones-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.notificaciones-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--uteq-text, #1e293b);
+  margin: 0;
+}
+
+.page-count {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--uteq-primary, #2ea3dc);
+}
+
+.acciones-bar {
+  margin-bottom: 1rem;
+}
+
+.notificaciones-card {
+  box-shadow: 0 2px 12px rgba(15, 26, 53, 0.07);
+}
+
+.notificaciones-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.notif-item {
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.9rem 0.25rem;
+  align-items: flex-start;
+}
+
+.notif-clickable {
+  cursor: pointer;
+}
+
+.notif-clickable:hover .notif-titulo {
+  color: var(--uteq-primary, #2ea3dc);
+}
+
+.notif-no-leida {
+  background: rgba(46, 163, 220, 0.05);
+  border-radius: 8px;
+  padding: 0.9rem;
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  margin-top: 0.45rem;
+  flex-shrink: 0;
+}
+
+.notif-dot-activo {
+  background: var(--uteq-primary, #2ea3dc);
+  box-shadow: 0 0 0 3px rgba(46, 163, 220, 0.2);
+}
+
+.notif-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.notif-titulo {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--uteq-text-muted, #64748b);
+  transition: color 0.15s;
+}
+
+.notif-titulo-no-leida {
+  font-weight: 700;
+  color: var(--uteq-navy-dark, #0f1a35);
+}
+
+.notif-fecha {
+  font-size: 0.75rem;
+  color: var(--uteq-text-muted, #94a3b8);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.notif-mensaje {
+  font-size: 0.85rem;
+  color: var(--uteq-text-muted, #64748b);
+  line-height: 1.4;
+}
+
+.notif-divider {
+  height: 1px;
+  background: #e9ecef;
+  margin: 0 0.25rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--uteq-text-muted, #94a3b8);
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--uteq-text, #1e293b);
+  margin: 0 0 0.5rem;
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--uteq-text-muted, #64748b);
+  margin: 0;
+  max-width: 400px;
+}

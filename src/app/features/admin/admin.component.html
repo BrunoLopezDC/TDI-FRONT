@@ -1,0 +1,77 @@
+<app-shell>
+  <div class="admin-dashboard">
+    <header class="dashboard-header">
+      <div class="greeting-group">
+        <h1 class="dashboard-greeting">Hola, {{ userName() }}.</h1>
+        <p-tag [value]="roleLabel()" [severity]="roleSeverity()" />
+      </div>
+    </header>
+
+    <div class="resumen-cards">
+      <p-card
+        class="resumen-card"
+        [class.card-highlight]="evidenciasPendientes() > 0 && !loadingPendientes() && !errorPendientes()"
+      >
+        <ng-template pTemplate="content">
+          @if (loadingPendientes()) {
+            <p-skeleton width="100%" height="72px" />
+          } @else if (errorPendientes(); as err) {
+            <p-message severity="error" [text]="err" />
+          } @else {
+            <div class="card-body">
+              <span class="card-label">Evidencias pendientes</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ evidenciasPendientes() }}</span>
+              </div>
+              @if (evidenciasPendientes() > 0) {
+                <span class="card-percent warn">Hay evidencias por revisar</span>
+              } @else {
+                <span class="card-percent">Sin pendientes</span>
+              }
+            </div>
+          }
+        </ng-template>
+      </p-card>
+
+      <p-card class="resumen-card">
+        <ng-template pTemplate="content">
+          @if (loadingCatalogo()) {
+            <p-skeleton width="100%" height="72px" />
+          } @else if (errorCatalogo(); as err) {
+            <p-message severity="error" [text]="err" />
+          } @else {
+            <div class="card-body">
+              <span class="card-label">Actividades en catálogo</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ actividadesCatalogo() }}</span>
+              </div>
+            </div>
+          }
+        </ng-template>
+      </p-card>
+    </div>
+
+    <div class="accesos-section">
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="accesos-grid">
+        <a class="acceso-card" routerLink="/admin/revisiones">
+          <span class="pi pi-inbox acceso-icon"></span>
+          <div class="acceso-text">
+            <span class="acceso-title">Revisar evidencias pendientes</span>
+            <span class="acceso-desc">Dictamina las evidencias subidas por los alumnos</span>
+          </div>
+          <span class="pi pi-chevron-right acceso-arrow"></span>
+        </a>
+
+        <a class="acceso-card" routerLink="/admin/catalogo">
+          <span class="pi pi-book acceso-icon"></span>
+          <div class="acceso-text">
+            <span class="acceso-title">Gestionar catálogo</span>
+            <span class="acceso-desc">Administra las actividades disponibles en el catálogo</span>
+          </div>
+          <span class="pi pi-chevron-right acceso-arrow"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</app-shell>

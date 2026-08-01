@@ -1,0 +1,171 @@
+.login-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.login-brand {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--uteq-navy-dark), var(--uteq-navy));
+  padding: 2.5rem 3rem;
+  color: var(--uteq-white);
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.brand-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.brand-headline {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1rem 0;
+  color: var(--uteq-white);
+}
+
+.brand-subtext {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 32rem;
+  margin: 0;
+}
+
+.brand-footer {
+  padding-top: 2rem;
+}
+
+.brand-institution {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.login-form-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--uteq-white);
+  padding: 2rem;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--uteq-navy-dark);
+  margin: 0 0 0.35rem 0;
+}
+
+.form-subtitle {
+  font-size: 0.875rem;
+  color: var(--uteq-text-muted);
+  margin: 0 0 2rem 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.login-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--uteq-navy-dark);
+}
+
+.password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgot-link {
+  font-size: 0.775rem;
+  color: var(--uteq-blue-accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.login-input {
+  width: 100%;
+}
+
+.login-password {
+  width: 100%;
+}
+
+.login-error {
+  width: 100%;
+}
+
+.login-submit {
+  width: 100%;
+}
+
+.support-text {
+  font-size: 0.8rem;
+  color: var(--uteq-text-muted);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.support-link {
+  color: var(--uteq-blue-accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.support-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .login-brand {
+    display: none;
+  }
+
+  .login-form-col {
+    padding: 2rem 1.25rem;
+  }
+}

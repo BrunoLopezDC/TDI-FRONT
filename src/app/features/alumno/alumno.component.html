@@ -1,0 +1,140 @@
+<app-shell>
+  @if (loading()) {
+    <div class="dashboard-loading">
+      <p-skeleton width="100%" height="120px" />
+      <p-skeleton width="100%" height="120px" />
+      <p-skeleton width="100%" height="120px" />
+    </div>
+  } @else if (error(); as err) {
+    <div class="dashboard-error">
+      <p-message severity="error" [text]="err" />
+    </div>
+  } @else {
+    <div class="dashboard">
+      <header class="dashboard-header">
+        <h1 class="dashboard-greeting">Hola, {{ userName() }}.</h1>
+        <div class="dashboard-actions">
+          <a routerLink="/alumno/catalogo">
+            <p-button label="Registrar actividad" icon="pi pi-plus" styleClass="p-button-outlined" />
+          </a>
+        </div>
+      </header>
+
+      <div class="resumen-cards">
+        <p-card class="resumen-card">
+          <ng-template pTemplate="content">
+            <div class="card-body">
+              <span class="card-label">Puntos acumulados</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ progreso()?.puntos_acumulados ?? 0 }}</span>
+                <span class="card-value-muted">/ {{ progreso()?.meta_puntos ?? 0 }}</span>
+              </div>
+              <span class="card-percent">{{ porcentajeGlobal() }}% completado</span>
+            </div>
+          </ng-template>
+        </p-card>
+
+        <p-card class="resumen-card">
+          <ng-template pTemplate="content">
+            <div class="card-body">
+              <span class="card-label">Actividades</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ totalRegistros() }}</span>
+                <span class="card-value-muted">registradas</span>
+              </div>
+              @if (enRevisionCount() > 0) {
+                <span class="card-percent warn">{{ enRevisionCount() }} en revisión</span>
+              } @else {
+                <span class="card-percent">—</span>
+              }
+            </div>
+          </ng-template>
+        </p-card>
+
+        <p-card class="resumen-card">
+          <ng-template pTemplate="content">
+            <div class="card-body">
+              <span class="card-label">Dimensiones</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ dimensionesConPuntos() }}</span>
+                <span class="card-value-muted">/ {{ totalDimensiones() }}</span>
+              </div>
+              @if (dimensionesFaltantes().length > 0) {
+                <span class="card-percent warn">Falta: {{ dimensionesFaltantes()[0].nombre }}</span>
+              } @else {
+                <span class="card-percent">Completas</span>
+              }
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
+
+      <div class="dashboard-main">
+        <div class="dashboard-actividades">
+          <p-card class="actividades-card">
+            <ng-template pTemplate="content">
+              <div class="section-header">
+                <h2 class="section-title">Actividades recientes</h2>
+                <a class="section-link" routerLink="/alumno/actividades">Ver todas</a>
+              </div>
+
+              @if (registros().length === 0) {
+                <div class="empty-state">
+                  <p-message severity="info" text="Aún no tienes actividades registradas. ¡Selecciona una del catálogo para empezar!" />
+                </div>
+              } @else {
+                <div class="actividades-list">
+                  @for (r of registrosRecientes(); track r.registro_id; let last = $last) {
+                    <div class="actividad-row">
+                      <div class="actividad-info">
+                        <span class="actividad-nombre">{{ r.tdi_nombre }}</span>
+                        <!-- TODO: backend no expone fecha/categoria en mis-registros -->
+                      </div>
+                      <div class="actividad-meta">
+                        <p-tag [value]="r.estado" [severity]="tagSeverity(r.estado)" />
+                        @if (r.estado === 'APROBADA' && r.horas_otorgadas > 0) {
+                          <span class="actividad-horas">{{ r.horas_otorgadas }}h</span>
+                        } @else {
+                          <span class="actividad-horas muted">—</span>
+                        }
+                      </div>
+                    </div>
+                    @if (!last) {
+                      <div class="actividad-divider"></div>
+                    }
+                  }
+                </div>
+              }
+            </ng-template>
+          </p-card>
+        </div>
+
+        <div class="dashboard-progreso">
+          @if (progreso(); as p) {
+            <p-card class="progreso-card">
+              <ng-template pTemplate="content">
+                <div class="progreso-body">
+                  <h3 class="progreso-title">Progreso integral</h3>
+                  <span class="progreso-porcentaje">{{ porcentajeGlobal() }}%</span>
+                  <p-progressbar [value]="porcentajeGlobal()" styleClass="progreso-bar" />
+
+                  <div class="progreso-dimensiones">
+                    @for (d of p.dimensiones; track d.dimension) {
+                      <div class="progreso-dim">
+                        <div class="progreso-dim-header">
+                          <span class="progreso-dim-nombre">{{ d.dimension }}</span>
+                          <span class="progreso-dim-valor">{{ d.porcentaje }}%</span>
+                        </div>
+                        <p-progressbar [value]="d.porcentaje" styleClass="progreso-dim-bar" />
+                      </div>
+                    }
+                  </div>
+                </div>
+              </ng-template>
+            </p-card>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</app-shell>

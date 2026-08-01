@@ -1,0 +1,163 @@
+.actividades-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.actividades-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.actividades-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--uteq-text, #1e293b);
+  margin: 0;
+}
+
+.page-count {
+  font-size: 0.875rem;
+  color: var(--uteq-text-muted, #64748b);
+}
+
+.actividades-card {
+  background: var(--uteq-white, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(15, 26, 53, 0.07);
+  padding: 1.25rem;
+}
+
+.filtros-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filtro-estado {
+  min-width: 180px;
+}
+
+.busqueda-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+}
+
+.busqueda-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--uteq-text-muted, #94a3b8);
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1;
+  line-height: 1;
+}
+
+.busqueda-input {
+  width: 100%;
+  padding-left: 2.5rem;
+}
+
+.empty-state-full {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+
+.empty-state-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--uteq-text-muted, #94a3b8);
+  margin-bottom: 1rem;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--uteq-text, #1e293b);
+  margin: 0 0 0.5rem;
+}
+
+.empty-desc {
+  font-size: 0.9rem;
+  color: var(--uteq-text-muted, #64748b);
+  margin: 0 0 1rem;
+  max-width: 400px;
+}
+
+.empty-link {
+  color: var(--uteq-primary, #2ea3dc);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.empty-link:hover {
+  text-decoration: underline;
+}
+
+.actividad-nombre-cell {
+  font-weight: 500;
+  color: var(--uteq-text, #1e293b);
+}
+
+.estado-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rechazo-info {
+  font-size: 1rem;
+  color: var(--uteq-danger, #ef4444);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.horas-value {
+  font-weight: 600;
+  color: var(--uteq-text, #1e293b);
+}
+
+.horas-value.muted {
+  color: var(--uteq-text-muted, #94a3b8);
+  font-weight: 400;
+}
+
+.empty-filter-row {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--uteq-text-muted, #64748b);
+}

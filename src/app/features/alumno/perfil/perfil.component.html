@@ -1,0 +1,64 @@
+<app-shell>
+  <div class="perfil-page">
+    @if (!user()) {
+      <div class="perfil-loading">
+        <p-skeleton width="100%" height="160px" />
+        <p-skeleton width="100%" height="200px" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Mi perfil</h1>
+      </header>
+
+      <div class="perfil-cards">
+        <p-card class="perfil-header-card">
+          <ng-template pTemplate="content">
+            <div class="perfil-header">
+              <p-avatar [label]="iniciales()" shape="circle" styleClass="perfil-avatar" size="xlarge" />
+              <div class="perfil-info">
+                <span class="perfil-nombre">{{ nombreCompleto() }}</span>
+                <span class="perfil-email">{{ user()?.email }}</span>
+                <p-tag [value]="roleLabel()" [severity]="roleSeverity()" />
+              </div>
+            </div>
+          </ng-template>
+        </p-card>
+
+        @if (perfilAlumno(); as perfil) {
+          <p-card class="perfil-datos-card">
+            <ng-template pTemplate="content">
+              <div class="perfil-datos">
+                <h2 class="perfil-datos-title">Datos académicos</h2>
+                <div class="dato-row">
+                  <span class="dato-label">Matrícula</span>
+                  <span class="dato-value">{{ perfil.matricula }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Carrera</span>
+                  <span class="dato-value">{{ perfil.carrera }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Horas acumuladas</span>
+                  <span class="dato-value">{{ perfil.horas_acumuladas }}h</span>
+                </div>
+              </div>
+            </ng-template>
+          </p-card>
+        } @else {
+          <p-card class="perfil-incompleto-card">
+            <ng-template pTemplate="content">
+              <div class="perfil-incompleto">
+                <span class="pi pi-id-card perfil-incompleto-icon"></span>
+                <h2 class="perfil-incompleto-title">Aún no has completado tu perfil académico</h2>
+                <p class="perfil-incompleto-desc">
+                  Para poder registrar actividades necesitas completar tus datos académicos.
+                </p>
+                <!-- TODO: pantalla de completar perfil aún no existe, este alumno no podrá continuar hasta que se construya -->
+              </div>
+            </ng-template>
+          </p-card>
+        }
+      </div>
+    }
+  </div>
+</app-shell>

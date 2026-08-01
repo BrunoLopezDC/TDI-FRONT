@@ -1,0 +1,75 @@
+<div class="login-wrapper">
+  <div class="login-brand">
+    <div class="brand-header">
+      <img [src]="logoUrl" alt="UTEQ" class="brand-logo" />
+      <span class="brand-text">UTEQ</span>
+    </div>
+
+    <div class="brand-body">
+      <h1 class="brand-headline">Formación Integral<br />y Actividades<br />Extracurriculares</h1>
+      <p class="brand-subtext">
+        Gestiona, registra y da seguimiento a tus actividades de formación integral de manera eficiente.
+      </p>
+    </div>
+
+    <div class="brand-footer">
+      <span class="brand-institution">UNIVERSIDAD TECNOLÓGICA DE QUERÉTARO</span>
+    </div>
+  </div>
+
+  <div class="login-form-col">
+    <div class="login-form-container">
+      <h2 class="form-title">Bienvenido de vuelta</h2>
+      <p class="form-subtitle">Ingresa tus credenciales para acceder al sistema</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="login-field">
+          <label for="email" class="login-label">Correo institucional</label>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            placeholder="matricula@uteq.edu.mx"
+            class="login-input"
+          />
+        </div>
+
+        <div class="login-field">
+          <div class="password-header">
+            <label for="password" class="login-label">Contraseña</label>
+            <!-- TODO: implementar funcionalidad de recuperación de contraseña -->
+            <a routerLink="" class="forgot-link">¿Olvidaste tu contraseña?</a>
+          </div>
+          <p-password
+            formControlName="password"
+            placeholder="••••••••"
+            [toggleMask]="true"
+            [feedback]="false"
+            styleClass="login-password"
+            inputStyleClass="login-input"
+          />
+        </div>
+
+        @if (loginError(); as msg) {
+          <p-message severity="error" [text]="msg" styleClass="login-error" />
+        }
+
+        <p-button
+          type="submit"
+          [disabled]="form.invalid || loading()"
+          [loading]="loading()"
+          label="Iniciar sesión"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          styleClass="login-submit"
+        />
+      </form>
+
+      <p class="support-text">
+        <!-- TODO: implementar enlace de soporte -->
+        ¿Problemas para acceder? <a routerLink="" class="support-link">Contacta a soporte académico</a>
+      </p>
+    </div>
+  </div>
+</div>

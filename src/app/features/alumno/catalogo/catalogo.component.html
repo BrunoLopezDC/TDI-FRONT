@@ -1,0 +1,112 @@
+<app-shell>
+  <div class="catalogo-page">
+    @if (loading() && actividades().length === 0) {
+      <div class="catalogo-loading">
+        <p-skeleton width="100%" height="48px" />
+        <div class="skeleton-grid">
+          @for (_ of [1,2,3,4,5,6]; track $index) {
+            <p-skeleton width="100%" height="220px" />
+          }
+        </div>
+      </div>
+    } @else if (error(); as err) {
+      <div class="catalogo-error">
+        <p-message severity="error" [text]="err" />
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="cargarCatalogo()" styleClass="p-button-outlined" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Catálogo de actividades</h1>
+      </header>
+
+      <div class="catalogo-card">
+        <div class="filtros-bar">
+          <p-select
+            [options]="categoriaOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filtroCategoria()"
+            (ngModelChange)="onCategoriaChange($event)"
+            placeholder="Categoría"
+            styleClass="filtro-select"
+          />
+          <p-select
+            [options]="dimensionOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [ngModel]="filtroDimension()"
+            (ngModelChange)="onDimensionChange($event)"
+            placeholder="Dimensión"
+            styleClass="filtro-select"
+          />
+          <span class="busqueda-wrapper">
+            <i class="pi pi-search busqueda-icon"></i>
+            <input
+              pInputText
+              type="text"
+              [ngModel]="textoBusqueda()"
+              (ngModelChange)="onSearchInput($event)"
+              placeholder="Buscar actividad..."
+              class="busqueda-input"
+            />
+          </span>
+        </div>
+
+        @if (actividades().length === 0) {
+          <div class="empty-state">
+            <span class="empty-icon pi pi-search"></span>
+            <p class="empty-desc">No se encontraron actividades con esos criterios.</p>
+            <p-button
+              label="Limpiar filtros"
+              icon="pi pi-filter-slash"
+              (onClick)="filtroCategoria.set(''); filtroDimension.set(''); textoBusqueda.set(''); cargarCatalogo()"
+              styleClass="p-button-text"
+            />
+          </div>
+        } @else {
+          <div class="catalogo-grid">
+            @for (actividad of actividades(); track actividad.id) {
+              <p-card class="catalogo-card-item">
+                <ng-template pTemplate="content">
+                  <div class="card-content">
+                    <h3 class="card-title">{{ actividad.nombre }}</h3>
+                    <div class="card-meta">
+                      <span class="meta-item">
+                        <i class="pi pi-clock"></i>
+                        {{ actividad.horas }}h
+                      </span>
+                      <span class="meta-item">
+                        <i class="pi pi-star-fill"></i>
+                        {{ actividad.puntaje }} pts
+                      </span>
+                    </div>
+                    <span class="card-evidencia">Requiere: {{ actividad.evidencia_requerida }}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                  <p-button
+                    [label]="idsSeleccionados().has(actividad.id) ? 'Ya seleccionada' : 'Seleccionar'"
+                    [disabled]="idsSeleccionados().has(actividad.id) || seleccionandoId() === actividad.id"
+                    [loading]="seleccionandoId() === actividad.id"
+                    (onClick)="confirmarSeleccion(actividad)"
+                    styleClass="p-button-sm seleccionar-btn"
+                  />
+                </ng-template>
+              </p-card>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <p-toast />
+  <p-confirmDialog />
+
+  <app-evidencia-upload
+    [registroId]="registroIdSubir()"
+    [visible]="uploadDialogVisible()"
+    (visibleChange)="uploadDialogVisible.set($event)"
+    (uploaded)="onEvidenciaSubida()"
+  />
+</app-shell>

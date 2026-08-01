@@ -1,0 +1,72 @@
+<app-shell>
+  <div class="notificaciones-page">
+    @if (loading()) {
+      <div class="notificaciones-loading">
+        <p-skeleton width="100%" height="56px" />
+        <p-skeleton width="100%" height="56px" />
+        <p-skeleton width="100%" height="56px" />
+        <p-skeleton width="100%" height="56px" />
+      </div>
+    } @else if (error(); as err) {
+      <div class="notificaciones-error">
+        <p-message severity="error" [text]="err" />
+        <p-button label="Reintentar" icon="pi pi-refresh" (onClick)="cargarNotificaciones()" styleClass="p-button-outlined" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Notificaciones</h1>
+        @if (haySinLeer()) {
+          <span class="page-count">{{ sinLeerCount() }} sin leer</span>
+        }
+      </header>
+
+      @if (haySinLeer()) {
+        <div class="acciones-bar">
+          <p-button
+            label="Marcar todas como leídas"
+            icon="pi pi-check-double"
+            size="small"
+            [loading]="marcandoTodas()"
+            (onClick)="marcarTodasLeidas()"
+            styleClass="p-button-outlined"
+          />
+        </div>
+      }
+
+      @if (notificaciones().length === 0) {
+        <div class="empty-state">
+          <span class="empty-icon pi pi-bell-slash"></span>
+          <h2 class="empty-title">No tienes notificaciones</h2>
+          <p class="empty-desc">Cuando haya novedades sobre tus actividades, las verás aquí.</p>
+        </div>
+      } @else {
+        <p-card class="notificaciones-card">
+          <ng-template pTemplate="content">
+            <div class="notificaciones-list">
+              @for (notif of notificaciones(); track notif.id; let last = $last) {
+                <div
+                  class="notif-item"
+                  [class.notif-no-leida]="!notif.leida"
+                  [class.notif-clickable]="!notif.leida"
+                  (click)="marcarLeida(notif)"
+                >
+                  <span class="notif-dot" [class.notif-dot-activo]="!notif.leida"></span>
+                  <div class="notif-body">
+                    <div class="notif-header">
+                      <span class="notif-titulo" [class.notif-titulo-no-leida]="!notif.leida">{{ notif.titulo }}</span>
+                      <span class="notif-fecha">{{ formatearFecha(notif.fecha) }}</span>
+                    </div>
+                    <span class="notif-mensaje">{{ notif.mensaje }}</span>
+                  </div>
+                </div>
+                @if (!last) {
+                  <div class="notif-divider"></div>
+                }
+              }
+            </div>
+          </ng-template>
+        </p-card>
+      }
+    }
+  </div>
+</app-shell>
