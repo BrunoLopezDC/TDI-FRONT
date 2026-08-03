@@ -82,6 +82,14 @@ export class AuthService {
     );
   }
 
+  refreshCurrentUser() {
+    this.getCurrentUser().subscribe({
+      next: (user) => {
+        this.#currentUser.set(user);
+      },
+    });
+  }
+
   deleteUser(id: string) {
     return this.http.delete<MessageResponse>(`${environment.apiBaseUrl}/api/users/users/${id}`);
   }

@@ -68,6 +68,28 @@ export const routes: Routes = [
     loadComponent: () => import('./features/creador/creador.component').then((m) => m.CreadorComponent),
   },
   {
+    path: 'creador/revisiones',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/admin/revisiones/revisiones.component').then((m) => m.RevisionesComponent),
+  },
+  {
+    path: 'creador/catalogo',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/admin/catalogo/admin-catalogo.component').then(
+        (m) => m.AdminCatalogoComponent,
+      ),
+  },
+  {
+    path: 'creador/perfil',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/creador/perfil/perfil-creador.component').then(
+        (m) => m.PerfilCreadorComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '/login',
   },

@@ -1,0 +1,217 @@
+<app-shell>
+  <div class="creador-dashboard">
+    <header class="dashboard-header">
+      <div class="greeting-group">
+        <h1 class="dashboard-greeting">Hola, {{ userName() }}.</h1>
+        <p-tag value="Creador" severity="success" />
+      </div>
+    </header>
+
+    @if (!perfilCreador()) {
+      <div class="warning-perfil-container mb-5">
+        <p-card class="warning-perfil-card">
+          <ng-template pTemplate="content">
+            <div class="warning-perfil-content">
+              <span class="pi pi-exclamation-triangle warning-icon"></span>
+              <div class="warning-text">
+                <h3 class="warning-title">Perfil de creador incompleto</h3>
+                <p class="warning-desc">
+                  Para poder gestionar el catálogo y realizar revisiones de evidencias, debes completar la información de tu institución.
+                </p>
+              </div>
+              <p-button
+                label="Completar perfil ahora"
+                icon="pi pi-user-edit"
+                styleClass="p-button-warning p-button-raised"
+                (onClick)="abrirModal()"
+              />
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
+    }
+
+    <div class="resumen-cards">
+      <p-card
+        class="resumen-card"
+        [class.card-highlight]="evidenciasPendientes() > 0 && !loadingPendientes() && !errorPendientes() && perfilCreador()"
+        [class.card-disabled]="!perfilCreador()"
+      >
+        <ng-template pTemplate="content">
+          @if (!perfilCreador()) {
+            <div class="card-body disabled-state">
+              <span class="card-label">Evidencias pendientes</span>
+              <div class="card-value-group">
+                <span class="pi pi-lock lock-icon"></span>
+              </div>
+              <span class="card-percent">Completa tu perfil para ver</span>
+            </div>
+          } @else if (loadingPendientes()) {
+            <p-skeleton width="100%" height="72px" />
+          } @else if (errorPendientes(); as err) {
+            <p-message severity="error" [text]="err" />
+          } @else {
+            <div class="card-body">
+              <span class="card-label">Evidencias pendientes</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ evidenciasPendientes() }}</span>
+              </div>
+              @if (evidenciasPendientes() > 0) {
+                <span class="card-percent warn">Hay evidencias por revisar</span>
+              } @else {
+                <span class="card-percent">Sin pendientes</span>
+              }
+            </div>
+          }
+        </ng-template>
+      </p-card>
+
+      <p-card
+        class="resumen-card"
+        [class.card-disabled]="!perfilCreador()"
+      >
+        <ng-template pTemplate="content">
+          @if (!perfilCreador()) {
+            <div class="card-body disabled-state">
+              <span class="card-label">Actividades en catálogo</span>
+              <div class="card-value-group">
+                <span class="pi pi-lock lock-icon"></span>
+              </div>
+              <span class="card-percent">Completa tu perfil para ver</span>
+            </div>
+          } @else if (loadingCatalogo()) {
+            <p-skeleton width="100%" height="72px" />
+          } @else if (errorCatalogo(); as err) {
+            <p-message severity="error" [text]="err" />
+          } @else {
+            <div class="card-body">
+              <span class="card-label">Actividades en catálogo</span>
+              <div class="card-value-group">
+                <span class="card-value-large">{{ actividadesCatalogo() }}</span>
+              </div>
+              <span class="card-percent">Actividades disponibles</span>
+            </div>
+          }
+        </ng-template>
+      </p-card>
+    </div>
+
+    <div class="accesos-section">
+      <h2 class="section-title">Accesos rápidos</h2>
+      <div class="accesos-grid">
+        @if (perfilCreador()) {
+          <a class="acceso-card" routerLink="/creador/revisiones">
+            <span class="pi pi-inbox acceso-icon"></span>
+            <div class="acceso-text">
+              <span class="acceso-title">Revisar evidencias</span>
+              <span class="acceso-desc">Dictamina las evidencias subidas por los alumnos</span>
+            </div>
+            <span class="pi pi-chevron-right acceso-arrow"></span>
+          </a>
+
+          <a class="acceso-card" routerLink="/creador/catalogo">
+            <span class="pi pi-book acceso-icon"></span>
+            <div class="acceso-text">
+              <span class="acceso-title">Gestionar catálogo</span>
+              <span class="acceso-desc">Administra las actividades del catálogo escolar</span>
+            </div>
+            <span class="pi pi-chevron-right acceso-arrow"></span>
+          </a>
+        } @else {
+          <div class="acceso-card acceso-card-disabled">
+            <span class="pi pi-inbox acceso-icon"></span>
+            <div class="acceso-text">
+              <span class="acceso-title">Revisar evidencias (Bloqueado)</span>
+              <span class="acceso-desc">Completa tu perfil de creador para acceder</span>
+            </div>
+            <span class="pi pi-lock acceso-lock-icon"></span>
+          </div>
+
+          <div class="acceso-card acceso-card-disabled">
+            <span class="pi pi-book acceso-icon"></span>
+            <div class="acceso-text">
+              <span class="acceso-title">Gestionar catálogo (Bloqueado)</span>
+              <span class="acceso-desc">Completa tu perfil de creador para acceder</span>
+            </div>
+            <span class="pi pi-lock acceso-lock-icon"></span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <p-toast />
+
+  <p-dialog
+    header="Completar perfil de creador"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [closable]="!enviando()"
+    [style]="{ width: '450px' }"
+    [appendTo]="'body'"
+  >
+    <div class="dialog-content">
+      @if (formError(); as err) {
+        <p-message severity="error" [text]="err" styleClass="w-full mb-4" />
+      }
+
+      <div class="form-field">
+        <label for="institucion" class="field-label">Institución / Organización</label>
+        <input
+          pInputText
+          id="institucion"
+          [ngModel]="institucion()"
+          (ngModelChange)="institucion.set($event)"
+          class="w-full"
+          placeholder="Ej. UTEQ, Secretaría de Cultura..."
+          [disabled]="enviando()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="tipo" class="field-label">Tipo de Creador</label>
+        <input
+          pInputText
+          id="tipo"
+          [ngModel]="tipo()"
+          (ngModelChange)="tipo.set($event)"
+          class="w-full"
+          placeholder="Ej. Docente, Vinculación, Externo..."
+          [disabled]="enviando()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="descripcion" class="field-label">Descripción o Cargo</label>
+        <textarea
+          pTextarea
+          id="descripcion"
+          [ngModel]="descripcion()"
+          (ngModelChange)="descripcion.set($event)"
+          rows="4"
+          class="w-full"
+          placeholder="Describe brevemente tu función o rol en la institución..."
+          [disabled]="enviando()"
+        ></textarea>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        styleClass="p-button-text"
+        (onClick)="dialogVisible.set(false)"
+        [disabled]="enviando()"
+      />
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        [loading]="enviando()"
+        [disabled]="!formValido()"
+        (onClick)="guardarPerfil()"
+      />
+    </ng-template>
+  </p-dialog>
+</app-shell>

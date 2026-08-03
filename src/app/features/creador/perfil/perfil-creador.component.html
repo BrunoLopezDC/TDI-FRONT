@@ -1,0 +1,151 @@
+<app-shell>
+  <div class="perfil-page">
+    @if (!user()) {
+      <div class="perfil-loading">
+        <p-skeleton width="100%" height="160px" />
+        <p-skeleton width="100%" height="200px" />
+      </div>
+    } @else {
+      <header class="page-header">
+        <h1 class="page-title">Mi perfil</h1>
+      </header>
+
+      <div class="perfil-cards">
+        <p-card class="perfil-header-card">
+          <ng-template pTemplate="content">
+            <div class="perfil-header">
+              <p-avatar [label]="iniciales()" shape="circle" styleClass="perfil-avatar" size="xlarge" />
+              <div class="perfil-info">
+                <span class="perfil-nombre">{{ nombreCompleto() }}</span>
+                <span class="perfil-email">{{ user()?.email }}</span>
+                <p-tag [value]="roleLabel()" [severity]="roleSeverity()" />
+              </div>
+            </div>
+          </ng-template>
+        </p-card>
+
+        @if (perfilCreador(); as perfil) {
+          <p-card class="perfil-datos-card">
+            <ng-template pTemplate="content">
+              <div class="perfil-datos">
+                <div class="perfil-section-header">
+                  <h2 class="perfil-datos-title">Datos del creador</h2>
+                  <p-button label="Editar" icon="pi pi-pencil" styleClass="p-button-text p-button-sm" (onClick)="abrirModal()" />
+                </div>
+                
+                <div class="dato-row">
+                  <span class="dato-label">Teléfono</span>
+                  <span class="dato-value">{{ user()?.telefono || 'No registrado' }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Institución</span>
+                  <span class="dato-value">{{ perfil.institucion }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Tipo de creador</span>
+                  <span class="dato-value">{{ perfil.tipo }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Descripción</span>
+                  <span class="dato-value">{{ perfil.descripcion }}</span>
+                </div>
+                <div class="dato-row">
+                  <span class="dato-label">Fecha de alta</span>
+                  <span class="dato-value">{{ fechaAlta() | date: "d 'de' MMMM 'de' yyyy" }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </p-card>
+        } @else {
+          <p-card class="perfil-incompleto-card">
+            <ng-template pTemplate="content">
+              <div class="perfil-incompleto">
+                <span class="pi pi-id-card perfil-incompleto-icon"></span>
+                <h2 class="perfil-incompleto-title">Aún no has completado tu perfil de creador</h2>
+                <p class="perfil-incompleto-desc">
+                  Para poder gestionar actividades y revisar evidencias necesitas registrar los datos de tu institución.
+                </p>
+                <p-button label="Completar perfil" icon="pi pi-user-edit" styleClass="p-button-raised" (onClick)="abrirModal()" />
+              </div>
+            </ng-template>
+          </p-card>
+        }
+      </div>
+    }
+  </div>
+
+  <p-toast />
+
+  <p-dialog
+    [header]="perfilCreador() ? 'Editar perfil de creador' : 'Completar perfil de creador'"
+    [visible]="dialogVisible()"
+    (visibleChange)="dialogVisible.set($event)"
+    [modal]="true"
+    [closable]="!enviando()"
+    [style]="{ width: '450px' }"
+    [appendTo]="'body'"
+  >
+    <div class="dialog-content">
+      @if (formError(); as err) {
+        <p-message severity="error" [text]="err" styleClass="w-full mb-4" />
+      }
+
+      <div class="form-field">
+        <label for="institucion" class="field-label">Institución / Organización</label>
+        <input
+          pInputText
+          id="institucion"
+          [ngModel]="institucion()"
+          (ngModelChange)="institucion.set($event)"
+          class="w-full"
+          placeholder="Ej. UTEQ, Secretaría de Cultura..."
+          [disabled]="enviando()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="tipo" class="field-label">Tipo de Creador</label>
+        <input
+          pInputText
+          id="tipo"
+          [ngModel]="tipo()"
+          (ngModelChange)="tipo.set($event)"
+          class="w-full"
+          placeholder="Ej. Docente, Vinculación, Externo..."
+          [disabled]="enviando()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="descripcion" class="field-label">Descripción o Cargo</label>
+        <textarea
+          pTextarea
+          id="descripcion"
+          [ngModel]="descripcion()"
+          (ngModelChange)="descripcion.set($event)"
+          rows="4"
+          class="w-full"
+          placeholder="Describe brevemente tu función o rol en la institución..."
+          [disabled]="enviando()"
+        ></textarea>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        styleClass="p-button-text"
+        (onClick)="dialogVisible.set(false)"
+        [disabled]="enviando()"
+      />
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        [loading]="enviando()"
+        [disabled]="!formValido()"
+        (onClick)="guardarPerfil()"
+      />
+    </ng-template>
+  </p-dialog>
+</app-shell>

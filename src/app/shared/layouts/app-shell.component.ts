@@ -37,6 +37,9 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
   ],
   CREADOR_TDI: [
     { label: 'Inicio', icon: 'pi pi-home', route: '/creador', tooltip: 'Inicio' },
+    { label: 'Revisiones pendientes', icon: 'pi pi-inbox', route: '/creador/revisiones', tooltip: 'Revisiones pendientes' },
+    { label: 'Catálogo', icon: 'pi pi-book', route: '/creador/catalogo', tooltip: 'Catálogo' },
+    { label: 'Mi perfil', icon: 'pi pi-user', route: '/creador/perfil', tooltip: 'Mi perfil' },
   ],
 };
 

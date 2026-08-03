@@ -12,6 +12,7 @@ export interface User {
   role: UserRole;
   perfil_alumno?: PerfilAlumno;
   perfil_administrativo?: PerfilAdministrativo;
+  perfil_creador?: PerfilCreador;
 }
 
 export interface PerfilAlumno {
@@ -22,6 +23,12 @@ export interface PerfilAlumno {
 
 export interface PerfilAdministrativo {
   cargo: string;
+}
+
+export interface PerfilCreador {
+  institucion: string;
+  tipo: string;
+  descripcion: string;
 }
 
 export interface LoginRequest {

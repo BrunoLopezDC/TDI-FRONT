@@ -1,0 +1,251 @@
+.creador-dashboard {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.greeting-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-greeting {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--uteq-navy-dark, #0f1a35);
+  margin: 0;
+}
+
+.mb-5 {
+  margin-bottom: 1.5rem;
+}
+
+/* Warning Perfil Card */
+.warning-perfil-card {
+  border: 1px solid #f59e0b;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+  background-color: #fffbeb;
+  border-radius: 8px;
+}
+
+.warning-perfil-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+}
+
+.warning-icon {
+  font-size: 2.25rem;
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.warning-text {
+  flex: 1;
+  min-width: 250px;
+}
+
+.warning-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 0.25rem;
+}
+
+.warning-desc {
+  font-size: 0.9rem;
+  color: #b45309;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Resumen Cards */
+.resumen-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.resumen-card {
+  box-shadow: 0 2px 12px rgba(15, 26, 53, 0.07);
+}
+
+.resumen-card.card-highlight {
+  border: 1px solid #f59e0b;
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.18);
+}
+
+.resumen-card.card-highlight .card-value-large {
+  color: #d97706;
+}
+
+.resumen-card.card-disabled {
+  background-color: #f8fafc;
+  opacity: 0.85;
+  border: 1px dashed #cbd5e1;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.card-body.disabled-state {
+  align-items: flex-start;
+  color: var(--uteq-text-muted, #94a3b8);
+}
+
+.lock-icon {
+  font-size: 1.75rem;
+  color: #94a3b8;
+  margin: 0.25rem 0;
+}
+
+.card-label {
+  font-size: 0.825rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--uteq-text-muted, #64748b);
+}
+
+.card-value-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.card-value-large {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--uteq-navy-dark, #0f1a35);
+  line-height: 1;
+}
+
+.card-percent {
+  font-size: 0.8rem;
+  color: var(--uteq-text-muted, #64748b);
+}
+
+.card-percent.warn {
+  color: #d97706;
+}
+
+/* Quick Access Section */
+.accesos-section {
+  max-width: 720px;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--uteq-navy-dark, #0f1a35);
+  margin: 0 0 1rem;
+}
+
+.accesos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.acceso-card {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 8px;
+  background-color: var(--uteq-white, #ffffff);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 26, 53, 0.05);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.acceso-card:hover {
+  border-color: var(--uteq-blue-accent, #2ea3dc);
+  box-shadow: 0 4px 12px rgba(46, 163, 220, 0.08);
+  transform: translateY(-2px);
+}
+
+.acceso-card-disabled {
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  opacity: 0.7;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 8px;
+}
+
+.acceso-icon {
+  font-size: 1.5rem;
+  color: var(--uteq-navy, #1c2b4a);
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.acceso-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.acceso-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--uteq-navy-dark, #0f1a35);
+}
+
+.acceso-card:hover .acceso-title {
+  color: var(--uteq-blue-accent, #2ea3dc);
+}
+
+.acceso-desc {
+  font-size: 0.8rem;
+  color: var(--uteq-text-muted, #64748b);
+}
+
+.acceso-arrow {
+  font-size: 0.85rem;
+  color: var(--uteq-text-muted, #94a3b8);
+  margin-left: 0.5rem;
+}
+
+.acceso-lock-icon {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin-left: 0.5rem;
+}
+
+/* Dialog Form Styles */
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--uteq-navy-dark, #0f1a35);
+}
