@@ -32,6 +32,7 @@ export class AuthService {
     this.http = http;
     if (this.#token()) {
       this.getCurrentUser().subscribe({
+        next: (user) => this.#currentUser.set(user),
         error: () => this.logout(),
       });
     }
