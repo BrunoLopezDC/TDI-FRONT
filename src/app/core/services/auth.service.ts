@@ -31,10 +31,12 @@ export class AuthService {
   constructor(http: HttpClient) {
     this.http = http;
     if (this.#token()) {
-      this.getCurrentUser().subscribe({
-        next: (user) => this.#currentUser.set(user),
-        error: () => this.logout(),
-      });
+      setTimeout(() => {
+        this.getCurrentUser().subscribe({
+          next: (user) => this.#currentUser.set(user),
+          error: () => this.logout(),
+        });
+      }, 0);
     }
   }
 
