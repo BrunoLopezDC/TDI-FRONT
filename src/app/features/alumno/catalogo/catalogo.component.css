@@ -151,6 +151,33 @@
   line-height: 1.4;
 }
 
+.card-creador {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.25rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.card-creador .pi {
+  font-size: 0.85rem;
+  color: var(--uteq-text-muted, #94a3b8);
+}
+
+.card-creador-texto {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--uteq-text, #1e293b);
+  line-height: 1.4;
+}
+
+.card-creador-inst {
+  font-size: 0.75rem;
+  color: var(--uteq-text-muted, #64748b);
+  line-height: 1.4;
+}
+
 .seleccionar-btn {
   width: 100%;
 }

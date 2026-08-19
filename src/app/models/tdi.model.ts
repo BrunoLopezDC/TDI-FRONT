@@ -10,6 +10,18 @@ export interface CatalogoItem {
   dimension_id: string;
   trascendencia_id: string;
   entorno_id: string;
+  creador?: CatalogoCreador | null;
+}
+
+export interface CatalogoCreador {
+  user_id: string;
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
+  email: string;
+  rol: string;
+  telefono: string;
+  institucion?: string;
 }
 
 export interface TablaMaestraItem {

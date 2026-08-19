@@ -149,6 +149,10 @@ export class CatalogoComponent implements OnInit {
     this.searchSubject.next(value);
   }
 
+  protected creadorIcon(rol: string): string {
+    return rol === 'CREADOR_TDI' ? 'pi pi-building' : 'pi pi-user';
+  }
+
   protected confirmarSeleccion(actividad: CatalogoItem) {
     this.confirmationService.confirm({
       message: `¿Deseas seleccionar "${actividad.nombre}"? Esto creará un registro pendiente que deberás completar subiendo evidencia.`,

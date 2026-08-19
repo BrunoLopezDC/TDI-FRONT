@@ -81,6 +81,17 @@
                       </span>
                     </div>
                     <span class="card-evidencia">Requiere: {{ actividad.evidencia_requerida }}</span>
+                    @if (actividad.creador; as creador) {
+                      <div class="card-creador">
+                        <i [class]="creadorIcon(creador.rol)"></i>
+                        <span class="card-creador-texto">
+                          Publicado por: {{ creador.nombre }} {{ creador.apellido_paterno }}
+                        </span>
+                        @if (creador.institucion) {
+                          <span class="card-creador-inst">{{ creador.institucion }}</span>
+                        }
+                      </div>
+                    }
                   </div>
                 </ng-template>
                 <ng-template pTemplate="footer">
