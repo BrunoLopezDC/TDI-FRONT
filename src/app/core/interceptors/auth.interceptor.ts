@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 const publicPaths = ['/api/users/login', '/api/users/register'];
 
@@ -12,7 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.token();
 
   const isPublic = publicPaths.some((path) => req.url.includes(path));
-  const isExternal = !req.url.startsWith('http://127.0.0.1:8080') && !req.url.startsWith('/api');
+  const isExternal = !req.url.startsWith(environment.apiBaseUrl) && !req.url.startsWith('/api');
 
   const isRevision = req.url.includes('/api/tdi/revisiones/');
   const user = authService.currentUser();
